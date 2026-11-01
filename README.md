@@ -12,6 +12,7 @@ audio processing are planned for later versions.
 - Mono files become mono tracks and stereo files become stereo tracks. Stereo tracks show left and right as separate waveform lanes.
 - Files at a different sample rate from the audio device are resampled when they're loaded.
 - All tracks play in sync and are mixed to the output.
+- Each track has mute and solo buttons. While any track is soloed, only soloed tracks are heard; mute wins over solo. Tracks that won't be heard are greyed out.
 
 | Control | Action |
 | --- | --- |
@@ -19,6 +20,8 @@ audio processing are planned for later versions.
 | Enter or Home | Return to the start |
 | Ctrl+O | Load audio |
 | Click a track | Select (highlight) it |
+| Speaker icon in a track's header | Mute / unmute the track (a red circle and line means muted) |
+| **S** button in a track's header | Solo / unsolo the track (yellow means soloed) |
 | Trash-can button, right-click a track > Delete Track, or Delete key | Remove the selected track (asks first; the file on disk is not touched) |
 | Click or drag on the ruler or a waveform | Move the playhead |
 | Ctrl + mouse wheel | Zoom in / out |

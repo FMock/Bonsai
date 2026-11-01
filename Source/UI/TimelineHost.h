@@ -39,5 +39,11 @@ namespace bonsai
 
         // Show the right-click menu for a track (Delete Track, ...).
         virtual void showTrackMenu (const Track& track) = 0;
+
+        // True if any track is soloed (so non-soloed tracks are silent).
+        virtual bool isAnyTrackSoloed() const = 0;
+
+        // A track's mute or solo changed; other tracks may need redrawing.
+        virtual void mixStateChanged() = 0;
     };
 }

@@ -5,8 +5,8 @@
 
 namespace bonsai
 {
-    // One row of the timeline: a header on the left (name, MONO/STEREO, file
-    // details) and the waveform to its right.
+    // One row of the timeline: a header on the left (name, MONO/STEREO, mute
+    // and solo buttons, file details) and the waveform to its right.
     class TrackLane final : public juce::Component
     {
     public:
@@ -34,12 +34,34 @@ namespace bonsai
 
         void setTrackNumber (int number);
 
+        // Shows the track's current mute/solo state (buttons and waveform colour).
+        void refreshMixState();
+
     private:
+        // Speaker icon that toggles mute. When muted it shows a red circle
+        // with a diagonal line over the speaker.
+        class MuteButton final : public juce::Button
+        {
+        public:
+            MuteButton();
+            void paintButton (juce::Graphics& g, bool highlighted, bool down) override;
+        };
+
+        // "S" button that toggles solo; lights up yellow when on.
+        class SoloButton final : public juce::Button
+        {
+        public:
+            SoloButton();
+            void paintButton (juce::Graphics& g, bool highlighted, bool down) override;
+        };
+
         std::shared_ptr<const Track> track;
         TimelineHost& host;
         int trackNumber;
         bool selected = false;
         WaveformView waveform;
+        MuteButton muteButton;
+        SoloButton soloButton;
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TrackLane)
     };

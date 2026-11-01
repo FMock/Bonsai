@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Engine/SessionPlayer.h"
+#include "UI/Theme.h"
 
 #include <juce_gui_basics/juce_gui_basics.h>
 
@@ -32,22 +33,30 @@ namespace bonsai
         void resized() override;
 
     private:
-        // A square button showing a trash can, styled like the TextButtons.
-        class TrashButton final : public juce::Button
+        // A square button that draws a symbol instead of text, styled like
+        // the TextButtons.
+        class IconButton final : public juce::Button
         {
         public:
-            TrashButton() : juce::Button ("Delete Track") {}
+            enum class Icon { trash, play, pause, stop };
+
+            IconButton (const juce::String& name, Icon iconToUse, juce::Colour hoverColourToUse)
+                : juce::Button (name), icon (iconToUse), hoverColour (hoverColourToUse) {}
 
             void paintButton (juce::Graphics& g, bool highlighted, bool down) override;
 
-            static juce::Path createTrashCanIcon (juce::Rectangle<float> area);
+            static juce::Path createIcon (Icon icon, juce::Rectangle<float> area);
+
+        private:
+            Icon icon;
+            juce::Colour hoverColour;
         };
 
         juce::TextButton loadButton { "Load Audio..." };
-        TrashButton deleteButton;
-        juce::TextButton playButton { "Play" };
-        juce::TextButton pauseButton { "Pause" };
-        juce::TextButton stopButton { "Stop" };
+        IconButton deleteButton { "Delete Track", IconButton::Icon::trash, theme::danger };
+        IconButton playButton   { "Play",  IconButton::Icon::play,  theme::playhead };
+        IconButton pauseButton  { "Pause", IconButton::Icon::pause, theme::playhead };
+        IconButton stopButton   { "Stop",  IconButton::Icon::stop,  theme::playhead };
         juce::Label timeLabel;
         juce::Label infoLabel;
 

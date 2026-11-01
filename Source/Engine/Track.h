@@ -10,7 +10,8 @@ namespace bonsai
     // at the session sample rate.
     //
     // The audio itself never changes after construction, so the audio thread
-    // can read it without locking. Only the gain is adjustable, and it's atomic.
+    // can read it without locking. Only the mix settings (gain, mute, solo) change,
+    // and they're atomic.
     class Track
     {
     public:
@@ -38,6 +39,27 @@ namespace bonsai
         float getGain() const noexcept                           { return gain.load(); }
         void setGain (float newGain) noexcept                    { gain.store (newGain); }
 
+        // Mute is a mix setting, not part of the audio, so it can be toggled
+        // through the const Track the UI holds. Safe from any thread.
+        bool isMuted() const noexcept                            { return muted.load(); }
+        void setMuted (bool shouldBeMuted) const noexcept        { muted.store (shouldBeMuted); }
+
+        // While any track is soloed, only soloed tracks are heard. Mute still
+        // wins over solo. Same threading rules as mute.
+        bool isSoloed() const noexcept                           { return soloed.load(); }
+        void setSoloed (bool shouldBeSoloed) const noexcept      { soloed.store (shouldBeSoloed); }
+
+        // Whether this track is heard, given whether any track is soloed.
+        bool isAudible (bool anyTrackSoloed) const noexcept
+        {
+            return ! isMuted() && (! anyTrackSoloed || isSoloed());
+        }
+
+        // Gain the mixer applied at the end of the last block, so gain changes
+        // (like mute) can ramp instead of clicking. Audio thread only.
+        float getLastMixGain() const noexcept                    { return lastMixGain; }
+        void setLastMixGain (float g) const noexcept             { lastMixGain = g; }
+
     private:
         const juce::String name;
         const juce::AudioBuffer<float> audio;
@@ -45,6 +67,9 @@ namespace bonsai
         const double sourceSampleRate;
         const juce::int64 id;
         std::atomic<float> gain { 1.0f };
+        mutable std::atomic<bool> muted { false };
+        mutable std::atomic<bool> soloed { false };
+        mutable float lastMixGain = 1.0f;
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Track)
     };

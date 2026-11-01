@@ -103,6 +103,7 @@ namespace bonsai
 
         layoutLanes();
         timeAxisChanged();
+        mixStateChanged();   // removing a soloed track can make others audible again
         repaint();   // shows the "drop files here" hint again when empty
     }
 
@@ -143,6 +144,21 @@ namespace bonsai
                                 if (result == deleteTrack && safeThis != nullptr && safeThis->onDeleteTrackRequested)
                                     safeThis->onDeleteTrackRequested (trackPtr);
                             });
+    }
+
+    bool TimelineView::isAnyTrackSoloed() const
+    {
+        for (auto* lane : lanes)
+            if (lane->getTrack()->isSoloed())
+                return true;
+
+        return false;
+    }
+
+    void TimelineView::mixStateChanged()
+    {
+        for (auto* lane : lanes)
+            lane->refreshMixState();
     }
 
     TrackLane* TimelineView::findLane (const Track& track) const

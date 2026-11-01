@@ -66,6 +66,8 @@ namespace bonsai
         bool handleTimelineWheel (const juce::MouseEvent& e, const juce::MouseWheelDetails& wheel) override;
         void selectTrack (const Track& track) override;
         void showTrackMenu (const Track& track) override;
+        bool isAnyTrackSoloed() const override;
+        void mixStateChanged() override;
 
     private:
         // Draws the playhead line over the ruler and lanes; ignores the mouse.
