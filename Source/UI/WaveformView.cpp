@@ -46,13 +46,16 @@ namespace bonsai
         const auto visibleStart = juce::jmax (0, (int) std::floor (clipStartX));
         const auto visibleEnd = juce::jmin (getWidth(), (int) std::ceil (clipEndX));
 
+        // Greyed out when it won't be heard (muted, or another track is soloed).
+        const auto muted = ! track->isAudible (host.isAnyTrackSoloed());
+
         if (visibleEnd > visibleStart)
         {
             const juce::Rectangle<float> clipRect ((float) clipStartX, 1.0f,
                                                    (float) (clipEndX - clipStartX), (float) getHeight() - 2.0f);
-            g.setColour (theme::clipBackground);
+            g.setColour (muted ? theme::mutedClipBackground : theme::clipBackground);
             g.fillRoundedRectangle (clipRect, 3.0f);
-            g.setColour (theme::clipBorder);
+            g.setColour (muted ? theme::mutedClipBorder : theme::clipBorder);
             g.drawRoundedRectangle (clipRect, 3.0f, 1.0f);
         }
 
@@ -76,7 +79,7 @@ namespace bonsai
                 continue;
 
             const auto waveArea = lane.reduced (0, 4);
-            g.setColour (theme::waveform);
+            g.setColour (muted ? theme::mutedWaveform : theme::waveform);
 
             if (samplesPerPixel >= thumbnailSamplesPerPixelThreshold)
             {

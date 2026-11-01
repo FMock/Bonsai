@@ -6,30 +6,49 @@ namespace bonsai
 {
     void SessionPlayer::prepareToPlay (int, double)
     {
-        // Tracks are already stored at the session rate and the mixer keeps no
-        // per-block state, so there's nothing to prepare yet.
+        // Tracks are already stored at the session rate, so there's nothing to
+        // prepare yet.
     }
 
     void SessionPlayer::releaseResources()
     {
     }
 
+    namespace
+    {
+        // The gain a track should be mixed at right now.
+        float getTargetGain (const Track& track, bool anyTrackSoloed) noexcept
+        {
+            return track.isAudible (anyTrackSoloed) ? track.getGain() : 0.0f;
+        }
+    }
+
     void SessionPlayer::getNextAudioBlock (const juce::AudioSourceChannelInfo& info)
     {
         info.clearActiveBufferRegion();
-
-        if (state.load() != TransportState::Playing)
-            return;
 
         const juce::ScopedTryLock lock (trackLock);
 
         if (! lock.isLocked())
             return;     // a track is being added right now; skip one block
 
+        const auto anyTrackSoloed = std::any_of (tracks.begin(), tracks.end(),
+                                                 [] (const auto& t) { return t->isSoloed(); });
+
+        if (state.load() != TransportState::Playing)
+        {
+            // Nothing to ramp while silent: jump straight to the current
+            // settings so playback starts at the right level.
+            for (const auto& track : tracks)
+                track->setLastMixGain (getTargetGain (*track, anyTrackSoloed));
+
+            return;
+        }
+
         auto start = position.load();
 
         for (const auto& track : tracks)
-            mixTrack (*track, start, info);
+            mixTrack (*track, anyTrackSoloed, start, info);
 
         const auto end = start + info.numSamples;
 
@@ -54,45 +73,61 @@ namespace bonsai
     }
 
     void SessionPlayer::mixTrack (const Track& track,
+                                  bool anyTrackSoloed,
                                   juce::int64 startSample,
                                   const juce::AudioSourceChannelInfo& info)
     {
         const auto trackLength = track.getLengthInSamples();
 
         if (startSample >= trackLength)
-            return;     // this track has already finished; it contributes silence
+        {
+            // This track has already finished; it contributes silence.
+            track.setLastMixGain (getTargetGain (track, anyTrackSoloed));
+            return;
+        }
 
         const auto numSamples = (int) std::min<juce::int64> (info.numSamples, trackLength - startSample);
         const auto sourceStart = (int) startSample;
-        const auto gain = track.getGain();
         const auto& audio = track.getAudio();
         auto& out = *info.buffer;
         const auto numOutChannels = out.getNumChannels();
 
-        if (numOutChannels == 0)
+        // Ramp from last block's gain to this one so muting doesn't click.
+        const auto startGain = track.getLastMixGain();
+        const auto endGain = getTargetGain (track, anyTrackSoloed);
+        track.setLastMixGain (endGain);
+
+        if (numOutChannels == 0 || (startGain == 0.0f && endGain == 0.0f))
             return;
+
+        const auto add = [&] (int destChannel, int sourceChannel, float scale)
+        {
+            out.addFromWithRamp (destChannel, info.startSample,
+                                 audio.getReadPointer (sourceChannel, sourceStart), numSamples,
+                                 startGain * scale, endGain * scale);
+        };
 
         if (numOutChannels == 1)
         {
             // Mono output device: fold stereo tracks down.
-            const auto channelGain = track.isStereo() ? gain * 0.5f : gain;
+            const auto scale = track.isStereo() ? 0.5f : 1.0f;
 
             for (int ch = 0; ch < track.getNumChannels(); ++ch)
-                out.addFrom (0, info.startSample, audio, ch, sourceStart, numSamples, channelGain);
+                add (0, ch, scale);
 
             return;
         }
 
         if (track.isStereo())
         {
-            out.addFrom (0, info.startSample, audio, 0, sourceStart, numSamples, gain);
-            out.addFrom (1, info.startSample, audio, 1, sourceStart, numSamples, gain);
+            add (0, 0, 1.0f);
+            add (1, 1, 1.0f);
         }
         else
         {
             // Mono track: same signal in left and right (centered).
-            out.addFrom (0, info.startSample, audio, 0, sourceStart, numSamples, gain);
-            out.addFrom (1, info.startSample, audio, 0, sourceStart, numSamples, gain);
+            add (0, 0, 1.0f);
+            add (1, 0, 1.0f);
         }
     }
 

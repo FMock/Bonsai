@@ -216,6 +216,79 @@ namespace bonsai
                 expectEquals (block.getMagnitude (0, blockSize), 0.0f);
             }
 
+            beginTest ("Muted track is silent from the start");
+            {
+                SessionPlayer player;
+                auto loud = makeConstantTrack ({ 0.5f }, 1000);
+                auto quiet = makeConstantTrack ({ 0.25f }, 1000);
+                player.addTrack (loud);
+                player.addTrack (quiet);
+
+                loud->setMuted (true);
+                render (player, block);                         // stopped: picks up the mute
+                player.play();
+                render (player, block);
+                expectWithinAbsoluteError (block.getSample (0, 0), 0.25f, 1.0e-6f);
+                expectWithinAbsoluteError (block.getSample (1, blockSize - 1), 0.25f, 1.0e-6f);
+            }
+
+            beginTest ("Muting during playback fades out over one block, then stays silent");
+            {
+                SessionPlayer player;
+                auto track = makeConstantTrack ({ 0.5f }, 1000);
+                player.addTrack (track);
+                player.play();
+                render (player, block);
+                expectEquals (block.getSample (0, 0), 0.5f);
+
+                track->setMuted (true);
+                render (player, block);                         // the ramp block
+                expectEquals (block.getSample (0, 0), 0.5f);
+                expectLessThan (block.getSample (0, blockSize - 1), 0.05f);
+
+                render (player, block);
+                expectEquals (block.getMagnitude (0, blockSize), 0.0f);
+
+                track->setMuted (false);
+                render (player, block);                         // fades back in
+                expectLessThan (block.getSample (0, 0), 0.05f);
+                render (player, block);
+                expectEquals (block.getSample (0, 0), 0.5f);
+            }
+
+            beginTest ("Solo: only soloed tracks are heard");
+            {
+                SessionPlayer player;
+                auto a = makeConstantTrack ({ 0.5f }, 1000);
+                auto b = makeConstantTrack ({ 0.25f }, 1000);
+                auto c = makeConstantTrack ({ 0.125f }, 1000);
+                player.addTrack (a);
+                player.addTrack (b);
+                player.addTrack (c);
+
+                b->setSoloed (true);
+                render (player, block);                         // stopped: picks up the solo
+                player.play();
+                render (player, block);
+                expectWithinAbsoluteError (block.getSample (0, 0), 0.25f, 1.0e-6f);
+
+                c->setSoloed (true);                            // two soloed tracks
+                render (player, block);                         // ramp block
+                render (player, block);
+                expectWithinAbsoluteError (block.getSample (0, 0), 0.375f, 1.0e-6f);
+
+                c->setMuted (true);                             // mute wins over solo
+                render (player, block);
+                render (player, block);
+                expectWithinAbsoluteError (block.getSample (0, 0), 0.25f, 1.0e-6f);
+
+                b->setSoloed (false);
+                c->setSoloed (false);                           // no solos: back to normal (c still muted)
+                render (player, block);
+                render (player, block);
+                expectWithinAbsoluteError (block.getSample (0, 0), 0.75f, 1.0e-6f);
+            }
+
             beginTest ("Play does nothing with no tracks");
             {
                 SessionPlayer player;

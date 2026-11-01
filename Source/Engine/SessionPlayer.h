@@ -64,6 +64,7 @@ namespace bonsai
 
     private:
         static void mixTrack (const Track& track,
+                              bool anyTrackSoloed,
                               juce::int64 startSample,
                               const juce::AudioSourceChannelInfo& info);
 
