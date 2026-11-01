@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="bNsT5x" name="BonsaiTests" projectType="consoleapp" version="0.1.0"
+              bundleIdentifier="com.bonsai.BonsaiTests" companyName="Bonsai"
+              useAppConfig="0" addUsingNamespaceToJuceHeader="0"
+              displaySplashScreen="0" cppLanguageStandard="20" jucerFormatVersion="1">
+  <MAINGROUP id="bNsTmg" name="BonsaiTests">
+    <GROUP id="{3B4C5D6E-7F80-4192-A3B4-C5D6E7F8091A}" name="Tests">
+      <FILE id="bNsT01" name="TestMain.cpp" compile="1" resource="0" file="TestMain.cpp"/>
+      <FILE id="bNsT02" name="SessionPlayerTests.cpp" compile="1" resource="0" file="SessionPlayerTests.cpp"/>
+      <FILE id="bNsT03" name="AudioFileLoaderTests.cpp" compile="1" resource="0" file="AudioFileLoaderTests.cpp"/>
+    </GROUP>
+    <GROUP id="{4C5D6E7F-8091-42A3-B4C5-D6E7F8091A2B}" name="Engine (code under test)">
+      <FILE id="bNsT10" name="AudioFileLoader.cpp" compile="1" resource="0" file="../Source/Engine/AudioFileLoader.cpp"/>
+      <FILE id="bNsT11" name="AudioFileLoader.h" compile="0" resource="0" file="../Source/Engine/AudioFileLoader.h"/>
+      <FILE id="bNsT12" name="SessionPlayer.cpp" compile="1" resource="0" file="../Source/Engine/SessionPlayer.cpp"/>
+      <FILE id="bNsT13" name="SessionPlayer.h" compile="0" resource="0" file="../Source/Engine/SessionPlayer.h"/>
+      <FILE id="bNsT14" name="Track.cpp" compile="1" resource="0" file="../Source/Engine/Track.cpp"/>
+      <FILE id="bNsT15" name="Track.h" compile="0" resource="0" file="../Source/Engine/Track.h"/>
+    </GROUP>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <VS2022 targetFolder="Builds/VisualStudio2022">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" isDebug="1" targetName="BonsaiTests" headerPath="../../../Source"
+                       winArchitecture="x64"/>
+        <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="BonsaiTests"
+                       headerPath="../../../Source" winArchitecture="x64"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_audio_basics" path="../../juce-9.0.4-windows/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../juce-9.0.4-windows/JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="../../juce-9.0.4-windows/JUCE/modules"/>
+      </MODULEPATHS>
+    </VS2022>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+  </MODULES>
+  <JUCEOPTIONS JUCE_USE_MP3AUDIOFORMAT="1"/>
+  <LIVE_SETTINGS>
+    <WINDOWS/>
+  </LIVE_SETTINGS>
+</JUCERPROJECT>
