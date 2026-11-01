@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="bNs4iA" name="Bonsai" projectType="guiapp" version="0.1.0"
+              bundleIdentifier="com.bonsai.Bonsai" companyName="Bonsai"
+              useAppConfig="0" addUsingNamespaceToJuceHeader="0"
+              displaySplashScreen="0" cppLanguageStandard="20" jucerFormatVersion="1">
+  <MAINGROUP id="bNsMgp" name="Bonsai">
+    <GROUP id="{6B1C2E7A-5D34-4F0B-9E21-0A7C3D5B8E10}" name="Source">
+      <FILE id="bNsF01" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+      <FILE id="bNsF02" name="MainComponent.cpp" compile="1" resource="0" file="Source/MainComponent.cpp"/>
+      <FILE id="bNsF03" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
+      <GROUP id="{1F2A3B4C-5D6E-4F70-8192-A3B4C5D6E7F8}" name="Engine">
+        <FILE id="bNsF10" name="AudioEngine.cpp" compile="1" resource="0" file="Source/Engine/AudioEngine.cpp"/>
+        <FILE id="bNsF11" name="AudioEngine.h" compile="0" resource="0" file="Source/Engine/AudioEngine.h"/>
+        <FILE id="bNsF12" name="AudioFileLoader.cpp" compile="1" resource="0" file="Source/Engine/AudioFileLoader.cpp"/>
+        <FILE id="bNsF13" name="AudioFileLoader.h" compile="0" resource="0" file="Source/Engine/AudioFileLoader.h"/>
+        <FILE id="bNsF14" name="SessionPlayer.cpp" compile="1" resource="0" file="Source/Engine/SessionPlayer.cpp"/>
+        <FILE id="bNsF15" name="SessionPlayer.h" compile="0" resource="0" file="Source/Engine/SessionPlayer.h"/>
+        <FILE id="bNsF16" name="Track.cpp" compile="1" resource="0" file="Source/Engine/Track.cpp"/>
+        <FILE id="bNsF17" name="Track.h" compile="0" resource="0" file="Source/Engine/Track.h"/>
+      </GROUP>
+      <GROUP id="{2A3B4C5D-6E7F-4081-92A3-B4C5D6E7F809}" name="UI">
+        <FILE id="bNsF20" name="Theme.h" compile="0" resource="0" file="Source/UI/Theme.h"/>
+        <FILE id="bNsF21" name="TimelineHost.h" compile="0" resource="0" file="Source/UI/TimelineHost.h"/>
+        <FILE id="bNsF22" name="TimelineView.cpp" compile="1" resource="0" file="Source/UI/TimelineView.cpp"/>
+        <FILE id="bNsF23" name="TimelineView.h" compile="0" resource="0" file="Source/UI/TimelineView.h"/>
+        <FILE id="bNsF24" name="TimeRuler.cpp" compile="1" resource="0" file="Source/UI/TimeRuler.cpp"/>
+        <FILE id="bNsF25" name="TimeRuler.h" compile="0" resource="0" file="Source/UI/TimeRuler.h"/>
+        <FILE id="bNsF26" name="TrackLane.cpp" compile="1" resource="0" file="Source/UI/TrackLane.cpp"/>
+        <FILE id="bNsF27" name="TrackLane.h" compile="0" resource="0" file="Source/UI/TrackLane.h"/>
+        <FILE id="bNsF28" name="TransportBar.cpp" compile="1" resource="0" file="Source/UI/TransportBar.cpp"/>
+        <FILE id="bNsF29" name="TransportBar.h" compile="0" resource="0" file="Source/UI/TransportBar.h"/>
+        <FILE id="bNsF30" name="WaveformView.cpp" compile="1" resource="0" file="Source/UI/WaveformView.cpp"/>
+        <FILE id="bNsF31" name="WaveformView.h" compile="0" resource="0" file="Source/UI/WaveformView.h"/>
+      </GROUP>
+    </GROUP>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <VS2022 targetFolder="Builds/VisualStudio2022">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" isDebug="1" targetName="Bonsai" headerPath="../../Source"
+                       winArchitecture="x64"/>
+        <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="Bonsai"
+                       headerPath="../../Source" winArchitecture="x64"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_audio_basics" path="../juce-9.0.4-windows/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../juce-9.0.4-windows/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../juce-9.0.4-windows/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../juce-9.0.4-windows/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors_headless" path="../juce-9.0.4-windows/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../juce-9.0.4-windows/JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="../juce-9.0.4-windows/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../juce-9.0.4-windows/JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../juce-9.0.4-windows/JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../juce-9.0.4-windows/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../juce-9.0.4-windows/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../juce-9.0.4-windows/JUCE/modules"/>
+      </MODULEPATHS>
+    </VS2022>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_audio_processors_headless" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+  </MODULES>
+  <JUCEOPTIONS JUCE_WEB_BROWSER="0" JUCE_USE_CURL="0" JUCE_USE_MP3AUDIOFORMAT="1"/>
+  <LIVE_SETTINGS>
+    <WINDOWS/>
+  </LIVE_SETTINGS>
+</JUCERPROJECT>
